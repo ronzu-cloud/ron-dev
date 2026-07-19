@@ -14,13 +14,14 @@
         <div class="text-xl font-bold text-blue-400">Ron Gerard B. Dasoc</div>
         <div class="space-x-6">
             <a href="#about" class="text-gray-300 hover:text-white transition">About Me</a>
+            <a href="#contact" class="text-gray-300 hover:text-white transition">Contacts</a>
         </div>
     </nav>
 
     <!-- Hero Section -->
     <header class="relative h-[70vh] flex items-center justify-center overflow-hidden">
         <div class="absolute inset-0 w-full h-full bg-cover bg-center bg-no-repeat"
-             style="background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');">
+              style="background-image: url('https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');">
         </div>
         <div class="absolute inset-0 bg-gray-950/70"></div>
 
@@ -31,93 +32,99 @@
             </p>
         </div>
     </header>
-
     <!-- About Me Section -->
     <section id="about" class="py-16 bg-gray-950">
-        <div class="max-w-3xl mx-auto px-6 text-center">
-            <h2 class="text-3xl font-bold mb-8 text-white">About Me</h2>
+        <div class="max-w-5xl mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-12 text-white text-center">About Me</h2>
 
-            <!-- Interactive Button -->
-            <button onclick="toggleAbout()" id="aboutBtn"
-                    class="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-full transition duration-300">
-                View My Profile
-            </button>
+            <!-- Flex Container: Image on Left, Content on Right -->
+            <div class="flex flex-col md:flex-row items-start gap-10">
 
-            <!-- Merged Info Box -->
-            <div id="aboutMore" class="hidden mt-8 p-8 bg-gray-900 rounded-2xl border border-gray-800 transition-all duration-500 ease-in-out">
-                <p class="text-lg text-gray-300 leading-relaxed text-left">
-                    I am an IT student at Sultan Kudarat State University (SKSU) driven by the intersection of code and creativity.
-                    <br><br>
-                    <strong>My Approach:</strong> I don't just write code; I design complete digital experiences. By combining <strong>UI/UX principles</strong> with clear communication, I build websites that are not only functional and responsive but intuitive for your users to navigate.
-                    <br><br>
-                    Whether it's streamlining community workflows or delivering custom web solutions, I focus on crafting digital assets that help businesses stand out and thrive.
-                </p>
+                <!-- Left Side: Profile Image -->
+                <div class="w-full md:w-1/3 flex justify-center md:justify-start">
+                    <img src="https://i.imghippo.com/files/g9655BVk.jpg"
+                         alt="Ron Gerard B. Dasoc"
+                         class="w-64 h-64 rounded-full object-cover border-4 border-white shadow-xl bg-gray-500">
+                </div>
+
+                <!-- Right Side: Text & Interactive Button -->
+                <div class="w-full md:w-2/3 text-center md:text-left">
+                    <!-- Interactive Button -->
+                    <button onclick="toggleAbout()" id="aboutBtn"
+                            class="px-8 py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-full transition duration-300">
+                        View My Profile
+                    </button>
+
+                    <!-- Merged Info Box -->
+                    <div id="aboutMore" class="hidden mt-8 p-8 bg-gray-900 rounded-2xl border border-gray-800 transition-all duration-500 ease-in-out">
+                        <p class="text-lg text-gray-300 leading-relaxed text-left">
+                            I am an IT student at Sultan Kudarat State University (SKSU) driven by the intersection of code and creativity.
+                            <br><br>
+                            <strong>My Approach:</strong> I don't just write code; I design complete digital experiences. By combining <strong>UI/UX principles</strong> with clear communication, I build websites that are not only functional and responsive but intuitive for your users to navigate.
+                            <br><br>
+                            Whether it's streamlining community workflows or delivering custom web solutions, I focus on crafting digital assets that help businesses stand out and thrive.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-<!-- Add this script before the </body> tag -->
-<script>
-    function toggleAbout() {
-        const moreText = document.getElementById("aboutMore");
-        const btn = document.getElementById("aboutBtn");
+    <!-- Skills & Presence Section -->
+    <div class="max-w-6xl mx-auto px-6">
+        <h2 class="text-3xl font-bold text-white text-center mb-12">Skills & Presence</h2>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
 
-        if (moreText.classList.contains("hidden")) {
-            moreText.classList.remove("hidden");
-            btn.innerText = "Hide Profile";
-            btn.classList.replace("bg-blue-600", "bg-gray-800");
-        } else {
-            moreText.classList.add("hidden");
-            btn.innerText = "View My Profile";
-            btn.classList.replace("bg-gray-800", "bg-blue-600");
-        }
-    }
-</script>
-
-<!-- Skills & Presence Section -->
-<div class="max-w-6xl mx-auto px-6">
-    <h2 class="text-3xl font-bold text-white text-center mb-12">Skills & Presence</h2>
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
-
-        <!-- Box 1: Tech Stack -->
-        <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800">
-            <h3 class="text-sm font-bold text-gray-300 mb-3 uppercase tracking-wider">Tech Stack</h3>
-            <div class="flex flex-wrap gap-1.5">
-                <span class="px-2 py-0.5 bg-blue-900/20 text-blue-400 rounded text-[10px] font-medium border border-blue-500/10">C++</span>
-                <span class="px-2 py-0.5 bg-orange-900/20 text-orange-400 rounded text-[10px] font-medium border border-orange-500/10">HTML</span>
-                <span class="px-2 py-0.5 bg-sky-900/20 text-sky-400 rounded text-[10px] font-medium border border-sky-500/10">CSS</span>
-                <span class="px-2 py-0.5 bg-teal-900/20 text-teal-400 rounded text-[10px] font-medium border border-teal-500/10">Tailwind</span>
-                <span class="px-2 py-0.5 bg-emerald-900/20 text-emerald-400 rounded text-[10px] font-medium border border-emerald-500/10">UI/UX</span>
-                <span class="px-2 py-0.5 bg-rose-900/20 text-rose-400 rounded text-[10px] font-medium border border-rose-500/10">Editing</span>
+            <!-- Box 1: Tech Stack -->
+            <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800">
+                <h3 class="text-sm font-bold text-gray-300 mb-3 uppercase">Tech Stack</h3>
+                <div class="flex flex-wrap gap-1.5">
+                    <span class="px-2 py-0.5 bg-blue-900/20 text-blue-400 rounded text-[10px] font-medium">C++</span>
+                    <span class="px-2 py-0.5 bg-orange-900/20 text-orange-400 rounded text-[10px] font-medium">HTML/CSS</span>
+                    <span class="px-2 py-0.5 bg-purple-900/20 text-purple-400 rounded text-[10px] font-medium">3D Modeling</span>
+                    <span class="px-2 py-0.5 bg-emerald-900/20 text-emerald-400 rounded text-[10px] font-medium">Rigging</span>
+                    <span class="px-2 py-0.5 bg-rose-900/20 text-rose-400 rounded text-[10px] font-medium">Animation</span>
+                    <span class="px-2 py-0.5 bg-sky-900/20 text-sky-400 rounded text-[10px] font-medium">UI/UX</span>
+                    <span class="px-2 py-0.5 bg-yellow-900/20 text-yellow-400 rounded text-[10px] font-medium">Editing</span>
+                </div>
             </div>
-        </div>
 
-        <!-- Box 2: Community -->
-        <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-600 transition">
-            <i class="fab fa-discord text-indigo-400 text-lg mb-2"></i>
-            <h3 class="text-sm font-bold text-gray-300 mb-1">Community</h3>
-            <p class="text-[11px] text-gray-500 leading-tight mb-2">Lead Mod (250+ members). 3 years of server architecture and automation.</p>
-            <a href="https://discord.gg/UdMKtNG2rH" target="_blank" class="text-indigo-400 text-[10px] font-bold hover:underline">Join →</a>
-        </div>
+            <!-- Box 2: Community -->
+            <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-600 transition">
+                <i class="fab fa-discord text-indigo-400 text-lg mb-2"></i>
+                <h3 class="text-sm font-bold text-gray-300 mb-1">Community</h3>
+                <p class="text-[11px] text-gray-500 leading-tight mb-2">Lead Mod (250+ members). 3 years of server architecture and automation.</p>
+                <a href="https://discord.gg/UdMKtNG2rH" target="_blank" class="text-indigo-400 text-[10px] font-bold hover:underline">Join →</a>
+            </div>
 
-        <!-- Box 3: TikTok -->
-        <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-600 transition">
-            <i class="fab fa-tiktok text-pink-400 text-lg mb-2"></i>
-            <h3 class="text-sm font-bold text-gray-300 mb-1">Creator</h3>
-            <p class="text-[11px] text-gray-500 leading-tight mb-2">Tech documentation and digital storytelling.</p>
-            <a href="https://tiktok.com/@.ronzu_" target="_blank" class="text-pink-400 text-[10px] font-bold hover:underline">@.ronzu_ →</a>
-        </div>
+            <!-- Box 3: TikTok -->
+            <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-600 transition">
+                <i class="fab fa-tiktok text-pink-400 text-lg mb-2"></i>
+                <h3 class="text-sm font-bold text-gray-300 mb-1">Creator</h3>
+                <p class="text-[11px] text-gray-500 leading-tight mb-2">Tech documentation and digital storytelling.</p>
+                <a href="https://tiktok.com/@.ronzu_" target="_blank" class="text-pink-400 text-[10px] font-bold hover:underline">@.ronzu_ →</a>
+            </div>
 
-        <!-- Box 4: Visual Design -->
-        <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-600 transition">
-            <i class="fab fa-instagram text-purple-400 text-lg mb-2"></i>
-            <h3 class="text-sm font-bold text-gray-300 mb-1">Visual Design</h3>
-            <p class="text-[11px] text-gray-500 leading-tight mb-2">Art brand (2.5k+) & freelance commissions.</p>
-            <a href="https://instagram.com/ronzu.dev" target="_blank" class="text-purple-400 text-[10px] font-bold hover:underline">@ronzu.dev →</a>
-        </div>
+            <!-- Box 3.1: YouTube -->
+            <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-600 transition">
+                <i class="fab fa-youtube text-red-500 text-lg mb-2"></i>
+                <h3 class="text-sm font-bold text-gray-300 mb-1">YouTube</h3>
+                <p class="text-[11px] text-gray-500 leading-tight mb-2">
+                    Devlogs, technical tutorials, and project showcases documenting my development journey.
+                </p>
+                <a href="https://www.youtube.com/@ronzu_dev" target="_blank" class="text-red-400 text-[10px] font-bold hover:underline">Watch Channel →</a>
+            </div>
 
+            <!-- Box 4: Visual Design -->
+            <div class="p-5 bg-gray-900/50 rounded-xl border border-gray-800 hover:border-gray-600 transition">
+                <i class="fab fa-instagram text-purple-400 text-lg mb-2"></i>
+                <h3 class="text-sm font-bold text-gray-300 mb-1">Visual Design</h3>
+                <p class="text-[11px] text-gray-500 leading-tight mb-2">Art brand (2.5k+) & freelance commissions.</p>
+                <a href="https://instagram.com/ronzu.dev" target="_blank" class="text-purple-400 text-[10px] font-bold hover:underline">@ronzu.dev →</a>
+            </div>
+
+        </div>
     </div>
-</div>
 
     <!-- Continuous Learning Section -->
     <section class="py-16">
@@ -142,6 +149,30 @@
         </div>
     </section>
 
+    <!-- Testimonials Section -->
+    <section class="py-16 bg-gray-900/20">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-3xl font-bold text-white text-center mb-12">Client Testimonials</h2>
+            <div id="reviews-container" class="space-y-6"></div>
+
+            <div class="mt-12 p-8 bg-gray-950 rounded-2xl border border-gray-800">
+                <h3 class="text-white font-bold mb-4">Leave a Review</h3>
+                <input type="text" id="username" placeholder="Your username or name" class="w-full bg-gray-900 p-3 rounded-lg border border-gray-800 text-white mb-4">
+
+                <div class="flex gap-2 mb-4" id="star-rating">
+                    <i class="fas fa-star text-gray-600 cursor-pointer hover:text-yellow-400"></i>
+                    <i class="fas fa-star text-gray-600 cursor-pointer hover:text-yellow-400"></i>
+                    <i class="fas fa-star text-gray-600 cursor-pointer hover:text-yellow-400"></i>
+                    <i class="fas fa-star text-gray-600 cursor-pointer hover:text-yellow-400"></i>
+                    <i class="fas fa-star text-gray-600 cursor-pointer hover:text-yellow-400"></i>
+                </div>
+
+                <textarea id="comment" class="w-full bg-gray-900 p-4 rounded-lg border border-gray-800 text-white mb-4" placeholder="Your review..."></textarea>
+                <button id="submitBtn" class="px-6 py-2 bg-blue-600 rounded-lg text-white font-bold hover:bg-blue-500 transition">Submit Review</button>
+            </div>
+        </div>
+    </section>
+
     <!-- Let's Connect Section -->
     <section id="contact" class="py-16 text-center">
         <h2 class="text-3xl font-bold text-white mb-8">Let's Connect</h2>
@@ -151,15 +182,12 @@
         </p>
 
         <div class="flex justify-center gap-6">
-            <!-- Gmail -->
             <a href="mailto:your.email@example.com" class="text-gray-400 hover:text-white transition">
                 <i class="fas fa-envelope text-2xl"></i>
             </a>
-            <!-- LinkedIn -->
             <a href="https://www.linkedin.com/in/ron-gerard-dasoc-1a530a211/" target="_blank" class="text-gray-400 hover:text-blue-500 transition">
                 <i class="fab fa-linkedin text-2xl"></i>
             </a>
-            <!-- Instagram -->
             <a href="https://instagram.com/ronzu.dev" target="_blank" class="text-gray-400 hover:text-purple-500 transition">
                 <i class="fab fa-instagram text-2xl"></i>
             </a>
@@ -180,5 +208,100 @@
     <footer class="py-8 text-center bg-gray-950">
         <p class="text-gray-600 text-xs">&copy; JULY, 2026 Ron Gerard B. Dasoc. All rights reserved.</p>
     </footer>
+
+    <script>
+        function toggleAbout() {
+            const moreText = document.getElementById("aboutMore");
+            const btn = document.getElementById("aboutBtn");
+
+            if (moreText.classList.contains("hidden")) {
+                moreText.classList.remove("hidden");
+                btn.innerText = "Hide Profile";
+                btn.classList.replace("bg-blue-600", "bg-gray-800");
+            } else {
+                moreText.classList.add("hidden");
+                btn.innerText = "View My Profile";
+                btn.classList.replace("bg-gray-800", "bg-blue-600");
+            }
+        }
+    </script>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+        const supabaseUrl = 'https://sgynyoakjbbwdepwspqt.supabase.co'
+        const supabaseKey = 'sb_publishable_SryzAtSQHjGRGrVnM6OHYQ_A9I5QD_U'
+        const supabase = createClient(supabaseUrl, supabaseKey)
+
+        let selectedRating = 0;
+        const stars = document.querySelectorAll('#star-rating i');
+
+        stars.forEach((star, index) => {
+            star.addEventListener('click', () => {
+                selectedRating = index + 1;
+                stars.forEach((s, i) => {
+                    s.classList.toggle('text-yellow-400', i <= index);
+                    s.classList.toggle('text-gray-600', i > index);
+                });
+            });
+        });
+
+        document.getElementById('submitBtn').addEventListener('click', async () => {
+            const username = document.getElementById('username').value;
+            const comment = document.getElementById('comment').value;
+
+            if (!username || selectedRating === 0) {
+                alert("Please enter a name and a rating!");
+                return;
+            }
+
+            const { error } = await supabase
+                .from('testimonials')
+                .insert([{ username, rating: selectedRating, comment }]);
+
+            if (error) {
+                alert("Error: " + error.message);
+            } else {
+                alert("Review submitted!");
+                document.getElementById('username').value = '';
+                document.getElementById('comment').value = '';
+                selectedRating = 0;
+                stars.forEach(s => {
+                    s.classList.remove('text-yellow-400');
+                    s.classList.add('text-gray-600');
+                });
+                fetchReviews();
+            }
+        });
+
+        async function fetchReviews() {
+            const { data, error } = await supabase
+                .from('testimonials')
+                .select('*');
+
+            if (error) {
+                console.error("Error fetching:", error);
+                return;
+            }
+
+            const container = document.getElementById('reviews-container');
+            container.innerHTML = '';
+
+            data.forEach(review => {
+                const div = document.createElement('div');
+                div.className = "p-4 bg-gray-900 rounded-lg border border-gray-800";
+                div.innerHTML = `
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="font-bold text-blue-400">${review.username}</span>
+                        <span class="text-yellow-400 text-xs">${'★'.repeat(review.rating)}</span>
+                    </div>
+                    <p class="text-gray-300 text-sm">${review.comment}</p>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        fetchReviews();
+    </script>
 </body>
 </html>
