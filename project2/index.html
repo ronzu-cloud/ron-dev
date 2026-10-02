@@ -32,7 +32,16 @@
         border: 3px solid #fbcfe8;
         border-radius: 1.75rem;
         box-shadow: 0 10px 30px rgba(244, 114, 182, 0.25);
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
       }
+
+      .card:hover {
+        transform: translateY(-5px) scale(1.01) rotate(0deg) !important;
+        box-shadow: 0 16px 35px rgba(255, 105, 180, 0.35);
+        border-color: rgba(255, 105, 180, 0.8);
+        background: linear-gradient(135deg, #fffaf5 0%, #fff0f5 100%);
+      }
+
       @keyframes beat {
         0%,
         100% {
@@ -47,7 +56,6 @@
         animation: beat 1.2s ease-in-out infinite;
       }
 
-      /* Heart photo frame */
       .combined-heart-frame {
         width: 270px;
         height: 240px;
@@ -97,7 +105,6 @@
         max-height: 110px;
       }
 
-      /* Scrollable dates & chat list */
       .scroll-pink {
         scrollbar-width: thin;
         scrollbar-color: #f9a8d4 transparent;
@@ -113,7 +120,20 @@
         background: transparent;
       }
 
-      /* Floating player card */
+      .special-date-item {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 12px;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+      .special-date-item:hover {
+        transform: translateX(6px);
+        background-color: rgba(255, 228, 230, 0.5);
+      }
+      .special-date-item:hover .date-title {
+        color: #db2777;
+      }
+
       @keyframes floatCard {
         0%,
         100% {
@@ -160,10 +180,9 @@
         line-height: 28px;
       }
 
-      /* Polaroids */
       .polaroid {
         background: #fff;
-        padding: 10px 10px 38px;
+        padding: 10px 10px 42px;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         position: relative;
         transition: transform 0.3s;
@@ -193,22 +212,6 @@
         left: 50%;
         transform: translateX(-50%);
         font-size: 22px;
-      }
-      .del {
-        position: absolute;
-        top: 2px;
-        right: 4px;
-        opacity: 0;
-        transition: 0.2s;
-        font-size: 14px;
-      }
-      .polaroid:hover .del {
-        opacity: 1;
-      }
-      @media (hover: none) {
-        .del {
-          opacity: 1;
-        }
       }
     </style>
   </head>
@@ -291,9 +294,20 @@
         <h2 class="script text-5xl text-pink-600 text-center mb-2">
           Special Dates
         </h2>
-        <p class="text-center text-pink-400 mb-6 text-sm">
+        <p class="text-center text-pink-400 mb-4 text-sm">
           dates we never forget 📅💗
         </p>
+
+        <!-- Add Special Date Trigger Button -->
+        <div class="text-center mb-5">
+          <button
+            id="openAddDateModalBtn"
+            class="hand text-lg font-bold text-pink-700 bg-white/80 hover:bg-white px-4 py-1.5 rounded-full shadow-md border border-pink-200 hover:scale-105 transition"
+          >
+            ➕ Add Special Date
+          </button>
+        </div>
+
         <div class="card p-5 sm:p-7 max-w-2xl mx-auto relative">
           <div class="absolute -top-3 -right-3" id="datesBow"></div>
           <div
@@ -304,43 +318,136 @@
       </section>
 
       <section id="gallery">
-        <h2 class="script text-5xl text-pink-600 text-center mb-2">
-          Our Photo Wall
-        </h2>
-        <p class="text-center text-pink-400 mb-5 text-sm">
-          add your favorite moments 🌸
-        </p>
-        <div class="text-center mb-8">
-          <label
-            class="inline-flex items-center gap-2 cursor-pointer px-6 py-3 rounded-full bg-pink-400 text-white font-bold shadow-lg hover:bg-pink-500 hover:scale-105 transition"
-          >
-            📷 Add Photo
-            <input
-              id="file"
-              type="file"
-              accept="image/*"
-              multiple
-              class="hidden"
-            />
-          </label>
+        <div
+          class="flex flex-col sm:flex-row items-center justify-between mb-4"
+        >
+          <div>
+            <h2 class="script text-5xl text-pink-600 text-center sm:text-left">
+              Our Photo Wall
+            </h2>
+            <p class="text-center sm:text-left text-pink-400 text-sm">
+              add our favorite moments 🌸
+            </p>
+          </div>
+          <div class="mt-3 sm:mt-0">
+            <button
+              id="toggleEditModeBtn"
+              class="hand text-base font-bold text-pink-700 bg-white/90 hover:bg-white px-4 py-1.5 rounded-full shadow-md border border-pink-200 transition flex items-center gap-1.5"
+            >
+              <span>✏️</span> <span id="editModeBtnText">Manage Photos</span>
+            </button>
+          </div>
         </div>
+
         <div
           id="grid"
           class="grid grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 px-2"
         ></div>
-        <p id="empty" class="text-center text-pink-400 hidden">
-          No photos yet — add your first one! 💖
-        </p>
+        <!-- Hidden file input for uploading -->
+        <input id="file" type="file" accept="image/*" multiple class="hidden" />
       </section>
     </main>
 
-    <!-- Surprise Modal Overlay with Embedded Tulip AVIF Image -->
+    <!-- Add Special Date Modal -->
+    <div
+      id="addDateModal"
+      class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden"
+    >
+      <div
+        class="card bg-[#fffaf5] p-6 max-w-md w-full text-left relative shadow-2xl"
+      >
+        <div
+          class="flex justify-between items-center mb-4 pb-2 border-b border-pink-100"
+        >
+          <h3 class="script text-3xl text-pink-600">Add New Special Date</h3>
+          <button
+            id="closeAddDateModal"
+            class="w-8 h-8 rounded-full bg-pink-400 text-white font-bold hover:bg-pink-500 transition shadow flex items-center justify-center"
+          >
+            ✕
+          </button>
+        </div>
+        <form id="addDateForm" class="space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-pink-600 mb-1"
+              >Title</label
+            >
+            <input
+              type="text"
+              id="newDateTitle"
+              required
+              placeholder="e.g., Anniversary"
+              class="w-full px-3 py-2 rounded-xl bg-pink-50/50 border border-pink-200 outline-none focus:border-pink-400 text-sm"
+            />
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-pink-600 mb-1"
+                >Date</label
+              >
+              <input
+                type="date"
+                id="newDateValue"
+                required
+                class="w-full px-3 py-2 rounded-xl bg-pink-50/50 border border-pink-200 outline-none focus:border-pink-400 text-sm text-pink-700"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-pink-600 mb-1"
+                >Emoji Icon</label
+              >
+              <input
+                type="text"
+                id="newDateEmoji"
+                value="💖"
+                required
+                class="w-full px-3 py-2 rounded-xl bg-pink-50/50 border border-pink-200 outline-none focus:border-pink-400 text-sm text-center"
+              />
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-pink-600 mb-1"
+              >Note / Description</label
+            >
+            <input
+              type="text"
+              id="newDateNote"
+              placeholder="e.g., a sweet memory"
+              class="w-full px-3 py-2 rounded-xl bg-pink-50/50 border border-pink-200 outline-none focus:border-pink-400 text-sm"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-pink-600 mb-1"
+              >Repeat</label
+            >
+            <select
+              id="newDateRepeat"
+              class="w-full px-3 py-2 rounded-xl bg-pink-50/50 border border-pink-200 outline-none focus:border-pink-400 text-sm text-pink-700"
+            >
+              <option value="">One-time event</option>
+              <option value="yearly">Yearly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+          <div class="pt-2 text-center">
+            <button
+              type="submit"
+              class="w-full py-2.5 rounded-xl bg-pink-500 text-white font-bold hover:bg-pink-600 shadow transition"
+            >
+              Save Special Date ✨
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Surprise Modal Overlay -->
     <div
       id="surpriseModal"
       class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden"
     >
       <div
-        class="card bg-[#fffaf5] p-6 sm:p-8 max-w-sm w-full text-center relative shadow-2xl animate-bounce-short"
+        class="card bg-[#fffaf5] p-6 sm:p-8 max-w-sm w-full text-center relative shadow-2xl"
       >
         <div class="absolute -top-3 -right-3">
           <button
@@ -350,7 +457,6 @@
             ✕
           </button>
         </div>
-
         <div
           class="mb-4 rounded-xl overflow-hidden border-2 border-pink-200 shadow-inner bg-pink-50"
         >
@@ -360,7 +466,6 @@
             class="w-full h-52 object-cover"
           />
         </div>
-
         <h3 class="script text-4xl text-pink-600 mb-1">A Gift For You!</h3>
         <p class="hand text-2xl text-pink-700 leading-snug mb-3">
           Glowing pink tulips just for my most precious girl! 💗
@@ -397,7 +502,6 @@
             ✕
           </button>
         </div>
-
         <div
           class="scroll-pink max-h-[60vh] overflow-y-auto pr-2 flex flex-col gap-3 text-xs sm:text-sm"
         >
@@ -408,7 +512,6 @@
             u and suddenly u asked... if naka dnd ko, i said yes gi ask ko if
             din ka.. and u replied:
           </div>
-
           <div
             class="bg-pink-50 text-pink-900 p-3.5 rounded-2xl rounded-tl-sm border border-pink-200 max-w-[90%] shadow-sm leading-relaxed"
           >
@@ -458,19 +561,16 @@
             say it, so i’ll just be honest with you. yes, i really do like you,
             ron.
           </div>
-
           <div
             class="bg-pink-500 text-white p-3.5 rounded-2xl rounded-tr-sm self-end max-w-[90%] shadow-sm leading-relaxed"
           >
             <b>Ron:</b> Aweeee preciouss, I actually feel the same wayyy
           </div>
-
           <div
             class="bg-pink-50 text-pink-900 p-3.5 rounded-2xl rounded-tl-sm border border-pink-200 max-w-[90%] shadow-sm leading-relaxed"
           >
             <b>Precious:</b> the same way?? huwattt
           </div>
-
           <div
             class="bg-pink-500 text-white p-3.5 rounded-2xl rounded-tr-sm self-end max-w-[90%] shadow-sm leading-relaxed"
           >
@@ -483,39 +583,33 @@
             would be better if we would meet someday? And I will court you if
             you let me (but idk how to court so) :>
           </div>
-
           <div
             class="bg-pink-50 text-pink-900 p-3.5 rounded-2xl rounded-tl-sm border border-pink-200 max-w-[90%] shadow-sm leading-relaxed"
           >
             <b>Precious:</b> OH MY DAYZ 😩 😩
           </div>
-
           <div
             class="bg-pink-500 text-white p-3.5 rounded-2xl rounded-tr-sm self-end max-w-[90%] shadow-sm leading-relaxed"
           >
             <b>Ron:</b> I actually admired u since the day we met
           </div>
-
           <div
             class="bg-pink-50 text-pink-900 p-3.5 rounded-2xl rounded-tl-sm border border-pink-200 max-w-[90%] shadow-sm leading-relaxed"
           >
             <b>Precious:</b> hala halaaa
           </div>
-
           <div
             class="bg-pink-500 text-white p-3.5 rounded-2xl rounded-tr-sm self-end max-w-[90%] shadow-sm leading-relaxed"
           >
             <b>Ron:</b> HAHAHAH siling ko gid eh satong isiling mo sakon gina
             <br /><br />Im so flattered idk what to sayyyy
           </div>
-
           <div
             class="bg-pink-50 text-pink-900 p-3.5 rounded-2xl rounded-tl-sm border border-pink-200 max-w-[90%] shadow-sm leading-relaxed"
           >
             <b>Precious:</b> that's so cuteeee, pero patas sa gin hambal ko gina
             i’m not trying to rush anything naman mwehehe
           </div>
-
           <div
             class="bg-pink-500 text-white p-3.5 rounded-2xl rounded-tr-sm self-end max-w-[90%] shadow-sm leading-relaxed"
           >
@@ -525,7 +619,6 @@
             things and mag away ta pirmi and end up going separate ways and
             become toxic so its better if we would do it when we meet :>
           </div>
-
           <div
             class="bg-pink-50 text-pink-900 p-3.5 rounded-2xl rounded-tl-sm border border-pink-200 max-w-[90%] shadow-sm leading-relaxed"
           >
@@ -559,7 +652,6 @@
             ✕
           </button>
         </div>
-
         <div
           class="scroll-pink max-h-[60vh] overflow-y-auto pr-2 text-sm text-pink-800 lined whitespace-pre-line leading-relaxed pb-4"
           id="gfLetterBody"
@@ -574,6 +666,9 @@
       Made with <span class="beat">💗</span> just for you
     </footer>
 
+    <!-- Supabase Client Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
       (function () {
         "use strict";
@@ -586,6 +681,15 @@
         if (bgMusic) {
           bgMusic.volume = 0.25;
         }
+
+        // ================= SUPABASE CONFIGURATION =================
+        const SUPABASE_URL = "https://sgynyoakjbbwdepwspqt.supabase.co";
+        const SUPABASE_KEY = "sb_publishable_SryzAtSQHjGRGrVnM6OHYQ_A9I5QD_U";
+        const supabase = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_KEY,
+        );
+        // ==========================================================
 
         var CONFIG = {
           to: "To my precious,",
@@ -625,20 +729,6 @@
               date: "2027-02-14",
               repeat: "yearly",
               note: "waiting to celebrate valentines with u",
-            },
-            {
-              emoji: "🎂",
-              title: "Ron's Birthday",
-              date: "2006-03-14",
-              repeat: "yearly",
-              note: "one wish is tani makitaay nata someday",
-            },
-            {
-              emoji: "🎂",
-              title: "Precious' Birthday",
-              date: "2008-06-22",
-              repeat: "yearly",
-              note: "Thankful gid kay tita HAHAHAH 💗",
             },
           ],
           events: [
@@ -738,100 +828,48 @@
               month: "long",
               day: "numeric",
             });
-
             var actionButtonInside = "";
             if (ev.specialGiftCard) {
               actionButtonInside =
-                '<div class="mt-2">' +
-                '<button id="surpriseBtn" class="hand text-xs font-bold text-pink-700 bg-white/70 hover:bg-white px-3 py-1 rounded-full shadow-sm transition">🌷 click here for surprise</button>' +
-                "</div>";
+                '<div class="mt-2"><button id="surpriseBtn" class="hand text-xs font-bold text-pink-700 bg-white/70 hover:bg-white px-3 py-1 rounded-full shadow-sm transition">🌷 click here for surprise</button></div>';
             } else if (ev.specialConfessionCard) {
               actionButtonInside =
-                '<div class="mt-2">' +
-                '<button id="confessionBtn" class="hand text-xs font-bold text-pink-700 bg-white/70 hover:bg-white px-3 py-1 rounded-full shadow-sm transition">💌 read confession story</button>' +
-                "</div>";
+                '<div class="mt-2"><button id="confessionBtn" class="hand text-xs font-bold text-pink-700 bg-white/70 hover:bg-white px-3 py-1 rounded-full shadow-sm transition">💌 read confession story</button></div>';
             } else if (ev.specialGfCard) {
               actionButtonInside =
-                '<div class="mt-2">' +
-                '<button id="gfLetterBtn" class="hand text-xs font-bold text-pink-700 bg-white/90 hover:bg-white px-3.5 py-1.5 rounded-full shadow transition">💌 Read GF Day letter</button>' +
-                "</div>";
+                '<div class="mt-2"><button id="gfLetterBtn" class="hand text-xs font-bold text-pink-700 bg-white/90 hover:bg-white px-3.5 py-1.5 rounded-full shadow transition">💌 Read GF Day letter</button></div>';
             }
 
             var imageMarkup = "";
             if (ev.specialGfCard) {
-              // Custom styled heart envelope illustration inside the frame
               imageMarkup =
-                '<div class="my-4 pt-3 border-t border-pink-100">' +
-                '<div class="combined-heart-frame single" style="background:#fce7f3; justify-content:center; padding-top:0; position:relative;">' +
-                '<div style="width:110px; height:75px; background:#fff; border:2px solid #f472b6; border-radius:6px; position:relative; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(244,114,182,0.25);">' +
-                '  <div style="position:absolute; top:0; left:0; width:0; height:0; border-left:53px solid transparent; border-right:53px solid transparent; border-top:42px solid #fbcfe8;"></div>' +
-                '  <div style="position:relative; z-index:2; margin-top:12px; font-size:24px;">💌</div>' +
-                "</div>" +
+                '<div class="my-4 pt-3 border-t border-pink-100"><div class="combined-heart-frame single" style="background:#fce7f3; justify-content:center; padding-top:0; position:relative;"><div style="width:110px; height:75px; background:#fff; border:2px solid #f472b6; border-radius:6px; position:relative; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(244,114,182,0.25);"><div style="position:absolute; top:0; left:0; width:0; height:0; border-left:53px solid transparent; border-right:53px solid transparent; border-top:42px solid #fbcfe8;"></div><div style="position:relative; z-index:2; margin-top:12px; font-size:24px;">💌</div></div>' +
                 actionButtonInside +
                 "</div></div>";
             } else if (ev.specialConfessionCard) {
               imageMarkup =
-                '<div class="my-4 pt-3 border-t border-pink-100">' +
-                '<div class="combined-heart-frame">' +
-                '<div class="heart-content-inner">' +
-                '<img src="u.jpg" alt="Precious">' +
-                '<img src="me.jpg" alt="Ron">' +
-                "</div>" +
+                '<div class="my-4 pt-3 border-t border-pink-100"><div class="combined-heart-frame"><div class="heart-content-inner"><img src="u.jpg" alt="Precious"><img src="me.jpg" alt="Ron"></div>' +
                 actionButtonInside +
                 "</div></div>";
             } else if (ev.specialGiftCard) {
               imageMarkup =
-                '<div class="my-4 pt-3 border-t border-pink-100">' +
-                '<div class="combined-heart-frame single">' +
-                '<div class="heart-content-inner">' +
-                '<img src="kity.gif" alt="Gift photo">' +
-                "</div>" +
+                '<div class="my-4 pt-3 border-t border-pink-100"><div class="combined-heart-frame single"><div class="heart-content-inner"><img src="kity.gif" alt="Gift photo"></div>' +
                 actionButtonInside +
                 "</div></div>";
             } else {
               imageMarkup =
                 ev.images && ev.images.length
-                  ? '<div class="my-4 pt-3 border-t border-pink-100">' +
-                    '<div class="combined-heart-frame ' +
+                  ? '<div class="my-4 pt-3 border-t border-pink-100"><div class="combined-heart-frame ' +
                     (ev.images.length === 1 ? "single" : "") +
-                    '">' +
-                    '<div class="heart-content-inner">' +
+                    '"><div class="heart-content-inner">' +
                     ev.images
                       .map(function (img) {
                         return '<img src="' + img + '" alt="memory">';
                       })
                       .join("") +
-                    "</div>" +
-                    "</div></div>"
+                    "</div></div></div>"
                   : "";
             }
-
-            var headerContent =
-              '<div class="absolute -top-3 -right-3">' +
-              bow(34) +
-              "</div>" +
-              '<div class="text-4xl mb-1">' +
-              ev.emoji +
-              "</div>" +
-              '<h3 class="font-bold text-lg text-pink-600">' +
-              ev.title +
-              "</h3>" +
-              '<p class="hand text-xl text-pink-700 mb-3">' +
-              ev.note +
-              "</p>";
-
-            var timerContent =
-              '<div class="mb-2 mt-4 pt-3 border-t border-pink-100">' +
-              '<p class="text-xs font-bold text-pink-500" id="lab' +
-              i +
-              '"></p>' +
-              '<p class="text-xs text-pink-400 font-medium mt-0.5">' +
-              dateStr +
-              "</p>" +
-              "</div>" +
-              '<div class="grid grid-cols-4 gap-1 text-pink-600 mb-1" id="ev' +
-              i +
-              '"></div>';
 
             return (
               '<div id="' +
@@ -840,16 +878,28 @@
               (i % 2 ? 1 : -1) +
               "deg); " +
               (ev.specialGfCard ? "scroll-margin-top:16px;" : "") +
-              '">' +
-              headerContent +
+              '"><div class="absolute -top-3 -right-3">' +
+              bow(34) +
+              '</div><div class="text-4xl mb-1">' +
+              ev.emoji +
+              '</div><h3 class="font-bold text-lg text-pink-600">' +
+              ev.title +
+              '</h3><p class="hand text-xl text-pink-700 mb-3">' +
+              ev.note +
+              "</p>" +
               imageMarkup +
-              timerContent +
-              "</div>"
+              '<div class="mb-2 mt-4 pt-3 border-t border-pink-100"><p class="text-xs font-bold text-pink-500" id="lab' +
+              i +
+              '"></p><p class="text-xs text-pink-400 font-medium mt-0.5">' +
+              dateStr +
+              '</p></div><div class="grid grid-cols-4 gap-1 text-pink-600 mb-1" id="ev' +
+              i +
+              '"></div></div>'
             );
           })
           .join("");
 
-        // Surprise Modal Logic
+        // Surprise Modal
         var modal = $("surpriseModal");
         function openModal(e) {
           if (e) e.stopPropagation();
@@ -866,7 +916,7 @@
           if (e.target === modal) closeModal();
         });
 
-        // Confession Modal Logic
+        // Confession Modal
         var confessionModal = $("confessionModal");
         function openConfessionModal(e) {
           if (e) e.stopPropagation();
@@ -887,7 +937,7 @@
           if (e.target === confessionModal) closeConfessionModal();
         });
 
-        // GF Letter Modal Logic
+        // GF Letter Modal
         var gfLetterModal = $("gfLetterModal");
         function openGfLetterModal(e) {
           if (e) e.stopPropagation();
@@ -905,6 +955,43 @@
           if (e.target === gfLetterModal) closeGfLetterModal();
         });
         $("gfLetterBody").textContent = CONFIG.letter;
+
+        // Add Special Date Modal Logic
+        var addDateModal = $("addDateModal");
+        function openAddDateModal() {
+          addDateModal.classList.remove("hidden");
+        }
+        function closeAddDateModal() {
+          addDateModal.classList.add("hidden");
+          $("addDateForm").reset();
+        }
+        $("openAddDateModalBtn").addEventListener("click", openAddDateModal);
+        $("closeAddDateModal").addEventListener("click", closeAddDateModal);
+        addDateModal.addEventListener("click", function (e) {
+          if (e.target === addDateModal) closeAddDateModal();
+        });
+
+        $("addDateForm").addEventListener("submit", async function (e) {
+          e.preventDefault();
+          const title = $("newDateTitle").value;
+          const date = $("newDateValue").value;
+          const emoji = $("newDateEmoji").value;
+          const note = $("newDateNote").value;
+          const repeat = $("newDateRepeat").value || null;
+
+          const { error } = await supabase
+            .from("special_dates")
+            .insert([{ title, date, emoji, note, repeat }]);
+
+          if (error) {
+            console.error("Error adding special date:", error);
+            alert("Error saving special date to Supabase!");
+          } else {
+            closeAddDateModal();
+            fetchAndRenderDates();
+            burst();
+          }
+        });
 
         $("datesBow").innerHTML = bow(34);
         function startOfToday() {
@@ -950,9 +1037,25 @@
           });
         }
 
-        function renderDates() {
+        // Fetch custom dates from Supabase and merge with static ones
+        async function fetchAndRenderDates() {
+          var combinedDates = [...CONFIG.specialDates];
+
+          const { data, error } = await supabase
+            .from("special_dates")
+            .select("*")
+            .order("date", { ascending: true });
+
+          if (!error && data) {
+            combinedDates = combinedDates.concat(data);
+          }
+
+          renderDatesList(combinedDates);
+        }
+
+        function renderDatesList(datesArray) {
           var today = startOfToday();
-          var list = CONFIG.specialDates.map(function (sd) {
+          var list = datesArray.map(function (sd) {
             var when = nextDate(sd, today);
             return {
               sd: sd,
@@ -986,14 +1089,19 @@
                 month: "short",
                 day: "numeric",
               });
+
+              var deleteBtn = sd.id
+                ? '<button class="del-date text-pink-300 hover:text-pink-600 text-xs ml-2 px-1" data-id="' +
+                  sd.id +
+                  '" title="Delete">🗑️</button>'
+                : "";
+
               return (
-                '<div class="flex items-center gap-3 py-3 ' +
+                '<div class="special-date-item flex items-center gap-3 py-3 px-2 ' +
                 (i ? "border-t border-pink-100" : "") +
-                '">' +
-                '<div class="text-3xl">' +
+                '"><div class="text-3xl">' +
                 esc(sd.emoji) +
-                "</div>" +
-                '<div class="flex-1 text-left min-w-0"><p class="font-bold text-pink-600 break-words">' +
+                '</div><div class="flex-1 text-left min-w-0"><p class="date-title font-bold text-pink-600 break-words transition-colors">' +
                 esc(sd.title) +
                 "</p>" +
                 (sd.note
@@ -1003,20 +1111,38 @@
                   : "") +
                 '<p class="text-[11px] text-pink-400">' +
                 dateStr +
-                "</p></div>" +
-                '<div class="shrink-0 flex flex-col items-end gap-1">' +
-                '<span class="px-3 py-1 rounded-full text-xs font-bold ' +
+                '</p></div><div class="shrink-0 flex items-center gap-1"><span class="px-3 py-1 rounded-full text-xs font-bold ' +
                 cls +
                 '">' +
                 badge +
                 "</span>" +
+                deleteBtn +
                 "</div></div>"
               );
             })
             .join("");
         }
-        renderDates();
-        setInterval(renderDates, 60000);
+
+        $("dateList").addEventListener("click", async function (e) {
+          var delBtn = e.target.closest(".del-date");
+          if (!delBtn) return;
+          var id = delBtn.dataset.id;
+
+          const { error } = await supabase
+            .from("special_dates")
+            .delete()
+            .match({ id: id });
+
+          if (error) {
+            console.error("Delete error:", error);
+            alert("Failed to delete special date.");
+          } else {
+            fetchAndRenderDates();
+          }
+        });
+
+        fetchAndRenderDates();
+        setInterval(fetchAndRenderDates, 60000);
 
         function tick() {
           var now = Date.now();
@@ -1038,77 +1164,204 @@
         tick();
         setInterval(tick, 1000);
 
+        // ================= SUPABASE PHOTO WALL INTEGRATION =================
         var grid = $("grid"),
-          empty = $("empty"),
-          photos = [];
-        try {
-          photos = JSON.parse(localStorage.getItem("precious_photos") || "[]");
-        } catch (err) {}
-        function save() {
-          try {
-            localStorage.setItem("precious_photos", JSON.stringify(photos));
-          } catch (err) {}
-        }
-        function render() {
-          empty.classList.toggle("hidden", photos.length > 0);
-          grid.innerHTML = photos
-            .map(function (src, i) {
-              var rot = [-3, 2, -1.5, 3, -2.5, 1.5][i % 6];
+          fileInput = $("file"),
+          toggleEditModeBtn = $("toggleEditModeBtn"),
+          editModeBtnText = $("editModeBtnText");
+
+        var isEditMode = false;
+
+        toggleEditModeBtn.addEventListener("click", function () {
+          isEditMode = !isEditMode;
+          editModeBtnText.textContent = isEditMode
+            ? "Done Managing"
+            : "Manage Photos";
+          toggleEditModeBtn.classList.toggle("bg-pink-200", isEditMode);
+          loadPhotos();
+        });
+
+        async function loadPhotos() {
+          const { data, error } = await supabase
+            .from("photos")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+          if (error) {
+            console.error("Error fetching photos:", error);
+            return;
+          }
+
+          // Build the "Add Photo" card as the first item in the grid
+          var addCardHtml = `
+            <div class="polaroid cursor-pointer flex flex-col items-center justify-center text-center group border-2 border-dashed border-pink-300 hover:border-pink-500 bg-pink-50/50" id="addPhotoTrigger" style="transform:rotate(-2deg); min-height: 250px;">
+              <div class="tape"></div>
+              <div class="text-4xl mb-2 group-hover:scale-110 transition-transform">📷</div>
+              <p class="hand text-2xl text-pink-600 font-bold">Add Photo</p>
+              <p class="text-xs text-pink-400 mt-1">Click to upload memories</p>
+            </div>
+          `;
+
+          var polaroidsHtml = data
+            .map(function (photo, i) {
+              var rot = [-3, 2, -1.5, 3, -2.5, 1.5][(i + 1) % 6];
               var deco =
-                i % 2
+                (i + 1) % 2
                   ? '<div class="tape"></div>'
                   : '<div class="pin">📌</div>';
+              var captionText = photo.caption
+                ? esc(photo.caption)
+                : "our memory #" + (i + 1) + " 💗";
+
+              // Control panel only shows if isEditMode is true
+              var managementControls = "";
+              if (isEditMode) {
+                managementControls = `
+                  <div class="absolute bottom-1 left-2 right-2 flex items-center justify-between gap-1 bg-pink-50/90 p-1 rounded-lg border border-pink-200 shadow-sm">
+                    <input type="text" class="caption-input hand text-lg w-full bg-transparent text-center focus:bg-white outline-none rounded border-b border-pink-300 px-1" data-id="${
+                      photo.id
+                    }" value="${captionText}" title="Caption">
+                    <div class="flex items-center gap-1 shrink-0">
+                      <button class="save-btn text-green-600 hover:text-green-700 text-xs px-1 font-bold bg-white rounded shadow-sm py-0.5" data-id="${
+                        photo.id
+                      }" title="Save caption">💾 Save</button>
+                      <button class="del text-red-500 hover:text-red-700 text-xs px-1 font-bold bg-white rounded shadow-sm py-0.5" data-id="${
+                        photo.id
+                      }" title="Delete photo">🗑️</button>
+                    </div>
+                  </div>
+                `;
+              } else {
+                managementControls = `
+                  <div class="absolute bottom-2 left-2 right-2 text-center">
+                    <p class="hand text-2xl text-pink-800 truncate px-1">${captionText}</p>
+                  </div>
+                `;
+              }
+
               return (
                 '<div class="polaroid" style="transform:rotate(' +
                 rot +
                 'deg)">' +
                 deco +
-                '<button class="del" data-i="' +
-                i +
-                '" title="Remove">✖</button>' +
                 '<img src="' +
-                src +
-                '" alt="Our memory ' +
-                (i + 1) +
-                '">' +
-                '<p class="hand text-center text-xl absolute bottom-1 left-0 right-0">memory #' +
-                (i + 1) +
-                " 💗</p></div>"
+                photo.url +
+                '" alt="Memory">' +
+                managementControls +
+                "</div>"
               );
             })
             .join("");
+
+          grid.innerHTML = addCardHtml + polaroidsHtml;
         }
-        $("file").addEventListener("change", function (e) {
+
+        async function uploadPhoto(file) {
+          const randomString = Math.random().toString(36).substring(2, 8);
+          const fileName = `${Date.now()}_${randomString}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("gallery-photos")
+            .upload(fileName, file);
+
+          if (uploadError) {
+            console.error("Upload error details:", uploadError);
+            alert("Error uploading photo!");
+            return;
+          }
+
+          const {
+            data: { publicUrl },
+          } = supabase.storage.from("gallery-photos").getPublicUrl(fileName);
+
+          const { error: dbError } = await supabase
+            .from("photos")
+            .insert([{ url: publicUrl, caption: "our sweet memory 💗" }]);
+
+          if (dbError) {
+            console.error("Database error details:", dbError);
+            alert(
+              "Photo uploaded, but make sure you added a 'caption' text column in your Supabase table!",
+            );
+          } else {
+            loadPhotos();
+            burst();
+          }
+        }
+
+        grid.addEventListener("click", function (e) {
+          var trigger = e.target.closest("#addPhotoTrigger");
+          if (trigger) {
+            fileInput.click();
+          }
+        });
+
+        fileInput.addEventListener("change", function (e) {
           Array.prototype.slice.call(e.target.files).forEach(function (f) {
             if (!f.type.startsWith("image/")) return;
-            var r = new FileReader();
-            r.onload = function (ev) {
-              var img = new Image();
-              img.onload = function () {
-                var max = 700,
-                  k = Math.min(1, max / Math.max(img.width, img.height));
-                var c = document.createElement("canvas");
-                c.width = Math.round(img.width * k);
-                c.height = Math.round(img.height * k);
-                c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-                photos.push(c.toDataURL("image/jpeg", 0.8));
-                save();
-                render();
-              };
-              img.src = ev.target.result;
-            };
-            r.readAsDataURL(f);
+            uploadPhoto(f);
           });
           e.target.value = "";
         });
-        grid.addEventListener("click", function (e) {
+
+        async function saveCaption(polaroid) {
+          var input = polaroid.querySelector(".caption-input");
+          var saveBtn = polaroid.querySelector(".save-btn");
+          var photoId = input.dataset.id;
+          var newCaption = input.value;
+
+          const { error } = await supabase
+            .from("photos")
+            .update({ caption: newCaption })
+            .match({ id: photoId });
+
+          if (error) {
+            console.error("Error updating caption:", error);
+            alert("Failed to update caption.");
+          } else {
+            saveBtn.textContent = "✅ Saved!";
+            setTimeout(() => {
+              loadPhotos();
+            }, 600);
+          }
+        }
+
+        grid.addEventListener("click", async function (e) {
+          var saveBtn = e.target.closest(".save-btn");
+          if (saveBtn) {
+            await saveCaption(saveBtn.closest(".polaroid"));
+            return;
+          }
+
           var b = e.target.closest(".del");
           if (!b) return;
-          photos.splice(+b.dataset.i, 1);
-          save();
-          render();
+          if (!confirm("Are you sure you want to delete this photo?")) return;
+          var photoId = b.dataset.id;
+
+          const { error } = await supabase
+            .from("photos")
+            .delete()
+            .match({ id: photoId });
+
+          if (error) {
+            console.error("Delete error:", error);
+          } else {
+            loadPhotos();
+          }
         });
-        render();
+
+        grid.addEventListener("keydown", async function (e) {
+          if (
+            e.key === "Enter" &&
+            e.target.classList.contains("caption-input")
+          ) {
+            e.preventDefault();
+            await saveCaption(e.target.closest(".polaroid"));
+          }
+        });
+
+        loadPhotos();
+        // ===================================================================
 
         setInterval(spawn, 900);
         for (var i = 0; i < 8; i++) setTimeout(spawn, i * 200);
